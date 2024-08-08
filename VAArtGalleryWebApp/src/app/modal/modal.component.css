@@ -1,0 +1,15 @@
+.subtitle-modal
+{
+    
+}
+.subtitle-modal h3
+{
+    width: 80%;
+    display: inline-block;
+}
+.gallery-info
+{
+    display: flex;
+    flex-direction: column;
+    width: 100%;
+}

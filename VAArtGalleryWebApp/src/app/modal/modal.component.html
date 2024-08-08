@@ -1,0 +1,21 @@
+<h2 mat-dialog-title>Criar Galeria</h2>
+<mat-dialog-content>
+    <div class="gallery-info">
+        <mat-form-field>
+            <mat-label>Nome</mat-label>
+            <input matInput [(ngModel)]="data.name" />
+        </mat-form-field>
+        <mat-form-field>
+            <mat-label>Cidade</mat-label>
+            <input matInput [(ngModel)]="data.city" />
+        </mat-form-field>
+        <mat-form-field>
+            <mat-label>Gerente</mat-label>
+            <input matInput [(ngModel)]="data.manager" />
+        </mat-form-field>
+    </div>
+</mat-dialog-content>
+<mat-dialog-actions>
+    <button mat-button (click)="onNoClick()">Cancelar</button>
+    <button mat-button (click)="close()" cdkFocusInitial>Ok</button>
+</mat-dialog-actions>
