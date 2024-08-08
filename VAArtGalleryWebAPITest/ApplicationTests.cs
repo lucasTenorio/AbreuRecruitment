@@ -2,13 +2,20 @@ using VAArtGalleryWebAPI.Application.Queries;
 using Moq;
 using VAArtGalleryWebAPI.Domain.Entities;
 using VAArtGalleryWebAPI.Domain.Interfaces;
+using VAArtGalleryWebAPI.Application.Queries.ArtGalleries;
+using Xunit;
+using VAArtGalleryWebAPI.Application.Queries.ArtWork;
 
 namespace VAArGalleryWebAPITest
 {
     public class Tests
     {
+
+        private readonly Mock<IArtGalleryRepository> _artGalleryRepositorySpy = new Mock<IArtGalleryRepository>();
+        private readonly Mock<IArtWorkRepository> _artWorkRepositorySpy = new Mock<IArtWorkRepository>();
+
         ArtGallery g1 = new ArtGallery("Gallery One", "Beja", "Baltazar Braz");
-        ArtGallery g2 = new ArtGallery("Gallery Two", "Bragança", "Bernardo Beltrão");
+        ArtGallery g2 = new ArtGallery("Gallery Two", "Braganï¿½a", "Bernardo Beltrï¿½o");
         ArtWork a1 = new ArtWork("obra 1", "artista 1", 1900, 1000);
         ArtWork a2 = new ArtWork("obra 2", "artista 1", 1910, 1500);
         ArtWork a3 = new ArtWork("obra 3", "artista 2", 1920, 2000);
@@ -27,9 +34,9 @@ namespace VAArGalleryWebAPITest
         {
             var r = await new GetAllArtGalleriesQueryHandler(NormalArtGalleryRepositoryMock().Object).Handle(new GetAllArtGalleriesQuery(), CancellationToken.None);
             
-            Assert.That(r, Is.Not.Null);
-            Assert.That(r.Count, Is.EqualTo(2));
-            Assert.That(r.First().Manager, Is.EqualTo("Baltazar Braz"));
+            NUnit.Framework.Assert.That(r, Is.Not.Null);
+            NUnit.Framework.Assert.That(r.Count, Is.EqualTo(2));
+            NUnit.Framework.Assert.That(r.First().Manager, Is.EqualTo("Baltazar Braz"));
         }
 
         [Test]
@@ -37,7 +44,7 @@ namespace VAArGalleryWebAPITest
         {
             var r = await new GetArtGalleryArtWorksQueryHandler(InvalidGalleryArtWorksRepositoryMock().Object).Handle(new GetArtGalleryArtWorksQuery(Guid.NewGuid()), CancellationToken.None);
 
-            Assert.That(r, Is.Null);
+            NUnit.Framework.Assert.That(r, Is.Null);
         }
 
         [Test]
@@ -45,9 +52,23 @@ namespace VAArGalleryWebAPITest
         {
             var r = await new GetArtGalleryArtWorksQueryHandler(NormalArtWorksRepositoryMock().Object).Handle(new GetArtGalleryArtWorksQuery(Guid.NewGuid()), CancellationToken.None);
 
-            Assert.That(r, Is.Not.Null);
-            Assert.That(r.Count(), Is.EqualTo(2));
-            Assert.That(r.First(), Is.EqualTo(a1));
+            NUnit.Framework.Assert.That(r, Is.Not.Null);
+            NUnit.Framework.Assert.That(r.Count(), Is.EqualTo(2));
+            NUnit.Framework.Assert.That(r.First(), Is.EqualTo(a1));
+        }
+
+        [Test]
+        public async Task TestDeleteArtWorkById()
+        {
+            var result = await new DeleteArtWorkByIdHandlerAsync(ShouldDeleteArtWorkAsync().Object).Handle(new DeleteByIdArtWorksQuery(Guid.NewGuid()), CancellationToken.None);
+
+            NUnit.Framework.Assert.That(result, Is.Not.False);
+        }
+
+        [Test]
+        public void TestArgumentNullExceptionDeleteArtWorkById()
+        {
+            NUnit.Framework.Assert.ThrowsAsync<ArgumentNullException>(async () => await new DeleteArtWorkByIdHandlerAsync(ShouldThrowExceptionWhenTryDeleteArtWorkAsync().Object).Handle(new DeleteByIdArtWorksQuery(Guid.NewGuid()), CancellationToken.None));
         }
 
 
@@ -88,6 +109,24 @@ namespace VAArGalleryWebAPITest
             mock.Setup(m => m.GetArtWorksByGalleryIdAsync(It.IsAny<Guid>(), It.IsAny<CancellationToken>())).ThrowsAsync(new ArgumentException("", "artGalleryId"));
 
             return mock;
+        }
+
+        private Mock<IArtWorkRepository> ShouldDeleteArtWorkAsync()
+        {
+            // Given
+            _artWorkRepositorySpy.Setup(setup => setup.DeleteAsync(It.IsAny<Guid>(), It.IsAny<CancellationToken>())).ReturnsAsync(true);
+            // When
+            return _artWorkRepositorySpy;
+            // Then
+        }
+
+        private Mock<IArtWorkRepository> ShouldThrowExceptionWhenTryDeleteArtWorkAsync()
+        {
+            // Given
+            _artWorkRepositorySpy.Setup(setup => setup.DeleteAsync(It.IsAny<Guid>(), It.IsAny<CancellationToken>())).ThrowsAsync(new ArgumentNullException("", "artWorkId"));
+            // When
+            return _artWorkRepositorySpy;
+            // Then
         }
 
     }
