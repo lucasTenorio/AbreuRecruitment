@@ -1,5 +1,5 @@
 export interface Gallery {
-  id: string;
+  id?: string;
   name: string;
   city: string;
   manager: string;
