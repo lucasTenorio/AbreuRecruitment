@@ -12,6 +12,7 @@ import { Artwork, ArtworkKeys } from '../models/Artwork';
 export class ArtworkPortfolioComponent implements OnInit{
 
   @Input({required : true}) galleryId : string = "";
+  @Input({required : true}) title : string = "";
   artworks : Artwork[] = [];
   displayedColumns = Object.keys(ArtworkKeys);
   constructor(private service : ArtworkService){}

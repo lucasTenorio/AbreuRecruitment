@@ -33,7 +33,7 @@ namespace VAArtGalleryWebAPI.Infrastructure
             cancellationToken.ThrowIfCancellationRequested();
 
             var galleries = await GetAllArtGalleriesAsync(cancellationToken);
-
+            Console.WriteLine(galleries.Count());
             artGallery.Id = Guid.NewGuid();
             galleries.Add(artGallery);
 

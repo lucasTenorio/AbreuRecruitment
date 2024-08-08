@@ -47,8 +47,6 @@ export class GalleryComponent implements OnInit {
     });
 
     dialogRef.afterClosed().subscribe(result => {
-      console.log('The dialog was closed');
-      console.log(result);
       if (result !== undefined) {
         this.model = result.data;
         this.galleryService.postGalleryAsync(this.model).subscribe(

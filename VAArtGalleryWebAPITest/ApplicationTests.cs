@@ -3,8 +3,8 @@ using Moq;
 using VAArtGalleryWebAPI.Domain.Entities;
 using VAArtGalleryWebAPI.Domain.Interfaces;
 using VAArtGalleryWebAPI.Application.Queries.ArtGalleries;
-using Xunit;
 using VAArtGalleryWebAPI.Application.Queries.ArtWork;
+using VAArtGalleryWebAPI.WebApi.Models;
 
 namespace VAArGalleryWebAPITest
 {
@@ -14,6 +14,8 @@ namespace VAArGalleryWebAPITest
         private readonly Mock<IArtGalleryRepository> _artGalleryRepositorySpy = new Mock<IArtGalleryRepository>();
         private readonly Mock<IArtWorkRepository> _artWorkRepositorySpy = new Mock<IArtWorkRepository>();
 
+
+        private CreateArtGalleryRequest _galleryRequestStub = new ( "Gallery One", "Beja", "Baltazar Braz");
         ArtGallery g1 = new ArtGallery("Gallery One", "Beja", "Baltazar Braz");
         ArtGallery g2 = new ArtGallery("Gallery Two", "Bragan�a", "Bernardo Beltr�o");
         ArtWork a1 = new ArtWork("obra 1", "artista 1", 1900, 1000);
@@ -55,6 +57,14 @@ namespace VAArGalleryWebAPITest
             NUnit.Framework.Assert.That(r, Is.Not.Null);
             NUnit.Framework.Assert.That(r.Count(), Is.EqualTo(2));
             NUnit.Framework.Assert.That(r.First(), Is.EqualTo(a1));
+        }
+
+        [Test]
+        public async Task TestCreateArtGalleryPostAsync()
+        {
+            var result = await new PostGalleryHandlerAsync(ShouldCreateArtGalleryAsync().Object).Handle(new PostGalleryQuery(_galleryRequestStub), CancellationToken.None);
+            Console.WriteLine(g1.City);
+            NUnit.Framework.Assert.That(result.City, Is.EqualTo(g1.City));
         }
 
         [Test]
@@ -128,6 +138,15 @@ namespace VAArGalleryWebAPITest
             return _artWorkRepositorySpy;
             // Then
         }
-
+        
+        private Mock<IArtGalleryRepository> ShouldCreateArtGalleryAsync()
+        {
+            // Given
+            _artGalleryRepositorySpy.Setup(setup => setup.GetAllArtGalleriesAsync(It.IsAny<CancellationToken>())).ReturnsAsync(new List<ArtGallery>(){g1});
+            _artGalleryRepositorySpy.Setup(setup => setup.CreateAsync(It.IsAny<ArtGallery>(), It.IsAny<CancellationToken>())).ReturnsAsync(g1);
+            // When
+            return _artGalleryRepositorySpy;
+            // Then
+        }
     }
 }

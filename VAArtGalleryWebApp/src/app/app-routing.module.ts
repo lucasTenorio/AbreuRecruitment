@@ -6,7 +6,7 @@ import { ArtworkPortfolioComponent } from './artwork-portfolio/artwork-portfolio
 const routes: Routes = [
   { path: '', component: GalleryComponent },
   { path: 'art-galleries', component: GalleryComponent },
-  { path: 'artworks/:galleryId', component : ArtworkPortfolioComponent },
+  { path: 'artworks/:title/:galleryId', component : ArtworkPortfolioComponent },
 ];
 
 @NgModule({
