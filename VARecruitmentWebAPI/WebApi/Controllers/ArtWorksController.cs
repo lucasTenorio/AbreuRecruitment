@@ -7,7 +7,7 @@ using VAArtGalleryWebAPI.Application.Queries.ArtWork;
 
 namespace VAArtGalleryWebAPI.WebApi.Controllers
 {
-    [Route("api/art-work")]
+    [Route("api/art-works")]
     [ApiController]
     public class ArtWorksController(IMediator mediator) : ControllerBase{
         
