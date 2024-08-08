@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { Gallery } from './models';
+import { Gallery } from '../models/Gallery';
 import { GalleryService } from './gallery.service';
 
 
@@ -25,7 +25,4 @@ export class GalleryComponent implements OnInit {
     console.log(galleryId);
   }
 
-  openArtWorksList(galleryId: string) {
-    console.log(galleryId);
-  }
 }
